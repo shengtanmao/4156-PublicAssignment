@@ -8,7 +8,7 @@ public class Player {
 
   public Player(char type, int id) {
     this.setType(type);
-    this.id = id;
+    this.setId(id);
   }
 
   public char getType() {
@@ -17,6 +17,14 @@ public class Player {
 
   public void setType(char type) {
     this.type = type;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
 }
