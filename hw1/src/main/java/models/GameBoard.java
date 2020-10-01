@@ -26,8 +26,8 @@ public class GameBoard {
     }
     Player player1 = new Player(t1, 1);
     Player player2 = new Player(t2, 2);
-    setP1(player1);
-    setP2(player2);
+    p1 = player1;
+    p2 = player2;
     gameStarted = false;
     turn = 1;
     char[][] ibs = { { '\u0000', '\u0000', '\u0000' }, { '\u0000', '\u0000', '\u0000' },
@@ -63,27 +63,9 @@ public class GameBoard {
   }
 
   /**
-   * checks for draw.
+   * checks for winner from move. must be ran before updateDraw.
    */
-  public void checkDraw() {
-    boolean full = true;
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        if (boardState[i][j] == '\u0000') {
-          full = false;
-          break;
-        }
-      }
-    }
-    if (full && winner == 0) {
-      isDraw = true;
-    }
-  }
-
-  /**
-   * checks for winner from move.
-   */
-  public void checkWin(Move m) {
+  public void updateWin(Move m) {
     char sym = m.getPlayer().getType();
     int x = m.getMoveX();
     int y = m.getMoveY();
@@ -99,6 +81,26 @@ public class GameBoard {
     }
   }
 
+  /**
+   * checks for draw. must run updateWin beforehand
+   */
+  public void updateDraw() {
+    if (winner != 0) {
+      isDraw = false;
+      return;
+    }
+    boolean full = true;
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        if (boardState[i][j] == '\u0000') {
+          full = false;
+          break;
+        }
+      }
+    }
+    isDraw = full;
+  }
+
   public boolean isGameStarted() {
     return gameStarted;
   }
@@ -111,15 +113,24 @@ public class GameBoard {
     return p1;
   }
 
-  public void setP1(Player p1) {
-    this.p1 = p1;
-  }
-
   public Player getP2() {
     return p2;
   }
 
-  public void setP2(Player p2) {
-    this.p2 = p2;
+  public int getTurn() {
+    return turn;
   }
+
+  public char[][] getBoardState() {
+    return boardState;
+  }
+
+  public int getWinner() {
+    return winner;
+  }
+
+  public boolean isDraw() {
+    return isDraw;
+  }
+
 }

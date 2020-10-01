@@ -87,8 +87,8 @@ public class PlayGame {
         ctx.result(gson.toJson(ms));
 
         // checking for win and draw
-        gb.checkWin(mv);
-        gb.checkDraw();
+        gb.updateWin(mv);
+        gb.updateDraw();
         sendGameBoardToAllPlayers(gson.toJson(gb));
       }
     });
