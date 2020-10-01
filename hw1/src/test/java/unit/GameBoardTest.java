@@ -56,11 +56,6 @@ public class GameBoardTest {
     gb.updateBoard(m);
     assertEquals(2, gb.getTurn());
     assertEquals('X', gb.getBoardState()[1][1]);
-    // check if turn switches correctly when p2 moves
-    m.setPlayer(gb.getP2());
-    m.setMoveX(2);
-    gb.updateBoard(m);
-    assertEquals(1, gb.getTurn());
   }
 
   // test game board update for P2
@@ -76,6 +71,7 @@ public class GameBoardTest {
     m.setMoveX(2);
     gb.updateBoard(m);
     assertEquals(1, gb.getTurn());
+    assertEquals('O', gb.getBoardState()[2][1]);
   }
 
   // test checkMove for inputs outside of x range
