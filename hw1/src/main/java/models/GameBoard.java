@@ -69,8 +69,8 @@ public class GameBoard {
     char sym = m.getPlayer().getType();
     int x = m.getMoveX();
     int y = m.getMoveY();
-    boolean win = ((boardState[(x + 1) % 3][y] == sym && boardState[(x + 2) % 3][y] == sym)
-        || (boardState[x][(y + 1) % 3] == sym && boardState[x][(y + 2) % 3] == sym)
+    boolean win = ((boardState[x][(y + 1) % 3] == sym && boardState[x][(y + 2) % 3] == sym)
+        || (boardState[(x + 1) % 3][y] == sym && boardState[(x + 2) % 3][y] == sym)
         || (boardState[1][1] != '\u0000' && boardState[0][0] == boardState[1][1]
             && boardState[2][2] == boardState[1][1])
         || (boardState[1][1] != '\u0000' && boardState[0][2] == boardState[1][1]
@@ -121,16 +121,16 @@ public class GameBoard {
     return turn;
   }
 
-  public char[][] getBoardState() {
-    return boardState;
-  }
-
   public int getWinner() {
     return winner;
   }
 
   public boolean isDraw() {
     return isDraw;
+  }
+
+  public char getSquare(int x, int y) {
+    return boardState[x][y];
   }
 
 }

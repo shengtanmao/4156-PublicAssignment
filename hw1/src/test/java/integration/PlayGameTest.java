@@ -76,10 +76,10 @@ public class PlayGameTest {
   @Test
   @Order(4)
   public void testWin() {
-    Unirest.post("http://localhost:8080/move/2").body("x=1&y=0").asString();
-    Unirest.post("http://localhost:8080/move/1").body("x=0&y=1").asString();
-    Unirest.post("http://localhost:8080/move/2").body("x=2&y=0").asString();
-    Unirest.post("http://localhost:8080/move/1").body("x=0&y=2").asString();
+    Unirest.post("http://localhost:8080/move/2").body("x=0&y=1").asString();
+    Unirest.post("http://localhost:8080/move/1").body("x=1&y=0").asString();
+    Unirest.post("http://localhost:8080/move/2").body("x=0&y=2").asString();
+    Unirest.post("http://localhost:8080/move/1").body("x=2&y=0").asString();
     HttpResponse<String> response = Unirest.get("http://localhost:8080/gameboard").asString();
     String responseBody = response.getBody();
     JSONObject jsonObject = new JSONObject(responseBody);

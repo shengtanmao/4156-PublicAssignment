@@ -6,8 +6,6 @@ import models.GameBoard;
 import models.Move;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-
 public class GameBoardTest {
   GameBoard gb = new GameBoard();
 
@@ -21,9 +19,11 @@ public class GameBoardTest {
     assertEquals(2, gb.getP2().getId());
     assertEquals(false, gb.isGameStarted());
     assertEquals(1, gb.getTurn());
-    char[][] ibs = { { '\u0000', '\u0000', '\u0000' }, { '\u0000', '\u0000', '\u0000' },
-        { '\u0000', '\u0000', '\u0000' } };
-    assertEquals(true, Arrays.deepEquals(ibs, gb.getBoardState()));
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        assertEquals('\u0000', gb.getSquare(i, j));
+      }
+    }
     assertEquals(0, gb.getWinner());
     assertEquals(false, gb.isDraw());
   }
@@ -38,9 +38,11 @@ public class GameBoardTest {
     assertEquals(2, gb.getP2().getId());
     assertEquals(false, gb.isGameStarted());
     assertEquals(1, gb.getTurn());
-    char[][] ibs = { { '\u0000', '\u0000', '\u0000' }, { '\u0000', '\u0000', '\u0000' },
-        { '\u0000', '\u0000', '\u0000' } };
-    assertEquals(true, Arrays.deepEquals(ibs, gb.getBoardState()));
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        assertEquals('\u0000', gb.getSquare(i, j));
+      }
+    }
     assertEquals(0, gb.getWinner());
     assertEquals(false, gb.isDraw());
   }
@@ -55,7 +57,7 @@ public class GameBoardTest {
     m.setMoveY(1);
     gb.updateBoard(m);
     assertEquals(2, gb.getTurn());
-    assertEquals('X', gb.getBoardState()[1][1]);
+    assertEquals('X', gb.getSquare(1, 1));
   }
 
   // test game board update for P2
@@ -71,7 +73,7 @@ public class GameBoardTest {
     m.setMoveX(2);
     gb.updateBoard(m);
     assertEquals(1, gb.getTurn());
-    assertEquals('O', gb.getBoardState()[2][1]);
+    assertEquals('O', gb.getSquare(2, 1));
   }
 
   // test checkMove for inputs outside of x range
@@ -167,9 +169,9 @@ public class GameBoardTest {
     assertEquals(true, gb.checkMove(m));
   }
 
-  // test p1 winning on horizontal
+  // test no winner
   @Test
-  public void testHoriz1() {
+  public void noWinner() {
     gb.initGameBoard('X');
     Move m = new Move();
     m.setPlayer(gb.getP1());
@@ -181,16 +183,37 @@ public class GameBoardTest {
     m.setMoveY(1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP1());
+    m.setMoveX(2);
+    m.setMoveY(0);
+    gb.updateBoard(m);
+    gb.updateWin(m);
+    assertEquals(0, gb.getWinner());
+  }
+
+  // test p1 winning on horizontal
+  @Test
+  public void testHoriz1() {
+    gb.initGameBoard('X');
+    Move m = new Move();
+    m.setPlayer(gb.getP1());
+    m.setMoveX(0);
+    m.setMoveY(1);
+    gb.updateBoard(m);
+    m.setPlayer(gb.getP2());
     m.setMoveX(1);
     m.setMoveY(0);
     gb.updateBoard(m);
+    m.setPlayer(gb.getP1());
+    m.setMoveX(1);
+    m.setMoveY(1);
+    gb.updateBoard(m);
     m.setPlayer(gb.getP2());
-    m.setMoveX(0);
+    m.setMoveX(2);
     m.setMoveY(2);
     gb.updateBoard(m);
     m.setPlayer(gb.getP1());
     m.setMoveX(2);
-    m.setMoveY(0);
+    m.setMoveY(1);
     gb.updateBoard(m);
     gb.updateWin(m);
     assertEquals(1, gb.getWinner());
