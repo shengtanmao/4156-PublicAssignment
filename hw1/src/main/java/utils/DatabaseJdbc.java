@@ -46,7 +46,8 @@ public class DatabaseJdbc {
     try {
       stmt = con.createStatement();
       String sql = "CREATE TABLE IF NOT EXISTS MOVE_TABLE " + "(PLAYER_ID INT NOT NULL, "
-          + "PLAYER_TYPE INT NOT NULL, " + " MOVE_X INT NOT NULL, " + " MOVE_Y INT NOT NULL)";
+          + "PLAYER_TYPE INT NOT NULL, " + " MOVE_X INT NOT NULL, " + " MOVE_Y INT NOT NULL, "
+          + "UNIQUE (PLAYER_ID, MOVE_X, MOVE_Y))";
       stmt.executeUpdate(sql);
       stmt.close();
     } catch (Exception e) {

@@ -25,6 +25,7 @@ public class GameBoardTest {
     jdbc = new DatabaseJdbc();
     con = jdbc.createConnection();
     jdbc.createTable(con);
+    jdbc.clear(con);
   }
 
   @AfterEach

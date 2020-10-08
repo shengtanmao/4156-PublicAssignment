@@ -80,9 +80,7 @@ public class PlayGame {
       gb.setGameStarted(true);
       sendGameBoardToAllPlayers(gson.toJson(gb));
 
-      if (jdbc.size(con) == 1) {
-        jdbc.addMoveData(con, new Move(gb.getP2(), -1, -1));
-      }
+      jdbc.addMoveData(con, new Move(gb.getP2(), -1, -1));
     });
 
     // updates UI after move
