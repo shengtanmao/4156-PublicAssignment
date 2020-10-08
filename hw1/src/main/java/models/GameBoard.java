@@ -1,5 +1,15 @@
 package models;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import utils.DatabaseJdbc;
+
 public class GameBoard {
 
   private Player p1;
@@ -15,6 +25,48 @@ public class GameBoard {
   private int winner;
 
   private boolean isDraw;
+
+  // rests all fields
+  public void reset() {
+    p1 = null;
+    p2 = null;
+    gameStarted = false;
+    turn = 0;
+    boardState = null;
+    winner = 0;
+    isDraw = false;
+  }
+
+  public void loadFromDb(DatabaseJdbc jdbc, Connection con) {
+    try {
+      Statement stmt = con.createStatement();
+      ResultSet rs = stmt.executeQuery("SELECT * FROM MOVE_TABLE;");
+      // if p1 started game, initialize board
+      if (rs.next()) {
+        this.initGameBoard((char) rs.getInt("PLAYER_TYPE"));
+      } else {
+        return;
+      }
+      if (rs.next()) {
+        gameStarted = true;
+      } else {
+        return;
+      }
+
+      while (rs.next()) {
+        Move move = new Move(new Player((char) rs.getInt("PLAYER_TYPE"), rs.getInt("PLAYER_ID")),
+            rs.getInt("MOVE_X"), rs.getInt("MOVE_Y"));
+        if (!this.checkMove(move)) {
+          System.out.println("WTF");
+        }
+        this.updateBoard(move);
+        this.updateWin(move);
+        this.updateDraw();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
 
   /**
    * initializes board with player1's char.
@@ -43,8 +95,8 @@ public class GameBoard {
   public Boolean checkMove(Move m) {
     int x = m.getMoveX();
     int y = m.getMoveY();
-    return (x >= 0 && x < 3 && y >= 0 && y < 3 && boardState[x][y] == '\u0000'
-        && turn == m.getPlayer().getId());
+    return (turn == m.getPlayer().getId() && x >= 0 && x < 3 && y >= 0 && y < 3
+        && boardState[x][y] == '\u0000');
   }
 
   /**

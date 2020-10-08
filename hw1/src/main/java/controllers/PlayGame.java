@@ -3,10 +3,15 @@ package controllers;
 import com.google.gson.Gson;
 import io.javalin.Javalin;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Queue;
 import models.GameBoard;
 import models.Message;
 import models.Move;
+import models.Player;
+import utils.DatabaseJdbc;
+
 import org.eclipse.jetty.websocket.api.Session;
 
 public class PlayGame {
@@ -22,6 +27,22 @@ public class PlayGame {
    */
   public static void main(final String[] args) {
 
+    DatabaseJdbc jdbc = new DatabaseJdbc();
+    Connection con = jdbc.createConnection();
+    jdbc.createTable(con);
+
+    GameBoard gb = new GameBoard();
+    Gson gson = new Gson();
+    try {
+      if (jdbc.size(con) > 0) {
+        gb.loadFromDb(jdbc, con);
+        sendGameBoardToAllPlayers(gson.toJson(gb));
+      }
+    } catch (SQLException e) {
+      System.err.println("SQLException");
+      e.printStackTrace();
+    }
+
     app = Javalin.create(config -> {
       config.addStaticFiles("/public");
     }).start(PORT_NUMBER);
@@ -31,12 +52,12 @@ public class PlayGame {
       ctx.result(ctx.body());
     });
     // redirect to player 1 page
+    // clears the database
     app.get("/newgame", ctx -> {
       ctx.redirect("/tictactoe.html");
+      gb.reset();
+      jdbc.clear(con);
     });
-
-    GameBoard gb = new GameBoard();
-    Gson gson = new Gson();
 
     // get game board
     app.get("/gameboard", ctx -> {
@@ -48,6 +69,9 @@ public class PlayGame {
       char t1 = ctx.body().charAt(5);
       gb.initGameBoard(t1);
       ctx.result(gson.toJson(gb));
+
+      jdbc.clear(con);
+      jdbc.addMoveData(con, new Move(gb.getP1(), -1, -1));
     });
 
     // player 2 joins the game
@@ -55,6 +79,10 @@ public class PlayGame {
       ctx.redirect("/tictactoe.html?p=2");
       gb.setGameStarted(true);
       sendGameBoardToAllPlayers(gson.toJson(gb));
+
+      if (jdbc.size(con) == 1) {
+        jdbc.addMoveData(con, new Move(gb.getP2(), -1, -1));
+      }
     });
 
     // updates UI after move
@@ -64,13 +92,11 @@ public class PlayGame {
       int id = ctx.path().charAt(6) - '0';
       String move = ctx.body();
       // System.out.println(ctx.body());
-      Move mv = new Move();
-      mv.setMoveX(move.charAt(2) - '0');
-      mv.setMoveY(move.charAt(6) - '0');
+      Move mv;
       if (id == 1) {
-        mv.setPlayer(gb.getP1());
+        mv = new Move(gb.getP1(), move.charAt(2) - '0', move.charAt(6) - '0');
       } else {
-        mv.setPlayer(gb.getP2());
+        mv = new Move(gb.getP2(), move.charAt(2) - '0', move.charAt(6) - '0');
       }
 
       Message ms = new Message();
@@ -90,6 +116,8 @@ public class PlayGame {
         gb.updateWin(mv);
         gb.updateDraw();
         sendGameBoardToAllPlayers(gson.toJson(gb));
+
+        jdbc.addMoveData(con, mv);
       }
     });
 

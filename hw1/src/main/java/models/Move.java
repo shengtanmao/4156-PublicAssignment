@@ -8,6 +8,12 @@ public class Move {
 
   private int moveY;
 
+  public Move(Player p, int x, int y) {
+    player = p;
+    moveX = x;
+    moveY = y;
+  }
+
   public Player getPlayer() {
     return player;
   }

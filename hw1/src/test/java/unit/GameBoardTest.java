@@ -51,10 +51,7 @@ public class GameBoardTest {
   @Test
   public void testUpdateP1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     assertEquals(2, gb.getTurn());
     assertEquals('X', gb.getSquare(1, 1));
@@ -64,10 +61,7 @@ public class GameBoardTest {
   @Test
   public void testUpdateP2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(2);
@@ -80,10 +74,7 @@ public class GameBoardTest {
   @Test
   public void testMoveOutsideX() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveY(1);
-    m.setMoveX(-1);
+    Move m = new Move(gb.getP1(), 1, -1);
     assertEquals(false, gb.checkMove(m));
     m.setMoveX(3);
     assertEquals(false, gb.checkMove(m));
@@ -93,10 +84,7 @@ public class GameBoardTest {
   @Test
   public void testMoveOutsideY() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(-1);
+    Move m = new Move(gb.getP1(), 1, -1);
     assertEquals(false, gb.checkMove(m));
     m.setMoveY(3);
     assertEquals(false, gb.checkMove(m));
@@ -106,10 +94,7 @@ public class GameBoardTest {
   @Test
   public void testOccupied() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     assertEquals(false, gb.checkMove(m));
@@ -119,10 +104,7 @@ public class GameBoardTest {
   @Test
   public void testConsecutive1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setMoveY(2);
     assertEquals(false, gb.checkMove(m));
@@ -132,10 +114,7 @@ public class GameBoardTest {
   @Test
   public void testConsecutive2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveY(2);
@@ -148,10 +127,7 @@ public class GameBoardTest {
   @Test
   public void testValid1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     assertEquals(true, gb.checkMove(m));
   }
 
@@ -159,10 +135,7 @@ public class GameBoardTest {
   @Test
   public void testValid2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(2);
@@ -173,10 +146,7 @@ public class GameBoardTest {
   @Test
   public void noWinner() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(0);
+    Move m = new Move(gb.getP1(), 0, 0);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(0);
@@ -194,10 +164,7 @@ public class GameBoardTest {
   @Test
   public void testHoriz1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 0, 1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(1);
@@ -223,10 +190,7 @@ public class GameBoardTest {
   @Test
   public void testVert1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(0);
+    Move m = new Move(gb.getP1(), 0, 0);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(1);
@@ -252,10 +216,7 @@ public class GameBoardTest {
   @Test
   public void testDiag1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(0);
+    Move m = new Move(gb.getP1(), 0, 0);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(1);
@@ -281,11 +242,7 @@ public class GameBoardTest {
   @Test
   public void testRevDiag1() {
     gb.initGameBoard('X');
-    Move m = new Move();
-
-    m.setPlayer(gb.getP1());
-    m.setMoveX(2);
-    m.setMoveY(0);
+    Move m = new Move(gb.getP1(), 2, 0);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(1);
@@ -311,10 +268,7 @@ public class GameBoardTest {
   @Test
   public void testHoriz2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(2);
-    m.setMoveY(2);
+    Move m = new Move(gb.getP1(), 2, 2);
 
     m.setPlayer(gb.getP2());
     m.setMoveX(0);
@@ -344,10 +298,7 @@ public class GameBoardTest {
   @Test
   public void testVert2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(2);
-    m.setMoveY(2);
+    Move m = new Move(gb.getP1(), 2, 2);
 
     m.setPlayer(gb.getP2());
     m.setMoveX(0);
@@ -377,10 +328,7 @@ public class GameBoardTest {
   @Test
   public void testDiag2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(2);
+    Move m = new Move(gb.getP1(), 0, 2);
 
     m.setPlayer(gb.getP2());
     m.setMoveX(0);
@@ -410,10 +358,7 @@ public class GameBoardTest {
   @Test
   public void testRevDiag2() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(2);
-    m.setMoveY(2);
+    Move m = new Move(gb.getP1(), 2, 2);
 
     m.setPlayer(gb.getP2());
     m.setMoveX(2);
@@ -443,10 +388,7 @@ public class GameBoardTest {
   @Test
   public void testDrawWin() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(0);
+    Move m = new Move(gb.getP1(), 0, 0);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
     m.setMoveX(0);
@@ -473,10 +415,7 @@ public class GameBoardTest {
   @Test
   public void testUnfilled() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(1);
-    m.setMoveY(1);
+    Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     gb.updateWin(m);
     gb.updateDraw();
@@ -487,10 +426,7 @@ public class GameBoardTest {
   @Test
   public void testIsDraw() {
     gb.initGameBoard('X');
-    Move m = new Move();
-    m.setPlayer(gb.getP1());
-    m.setMoveX(0);
-    m.setMoveY(0);
+    Move m = new Move(gb.getP1(), 0, 0);
     gb.updateBoard(m);
     gb.updateWin(m);
     assertEquals(0, gb.getWinner());
