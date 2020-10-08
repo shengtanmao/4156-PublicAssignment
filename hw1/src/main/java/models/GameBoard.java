@@ -43,7 +43,7 @@ public class GameBoard {
       ResultSet rs = stmt.executeQuery("SELECT * FROM MOVE_TABLE;");
       // if p1 started game, initialize board
       if (rs.next()) {
-        this.initGameBoard((char) rs.getInt("PLAYER_TYPE"));
+        initGameBoard((char) rs.getInt("PLAYER_TYPE"));
       } else {
         return;
       }
@@ -56,9 +56,6 @@ public class GameBoard {
       while (rs.next()) {
         Move move = new Move(new Player((char) rs.getInt("PLAYER_TYPE"), rs.getInt("PLAYER_ID")),
             rs.getInt("MOVE_X"), rs.getInt("MOVE_Y"));
-        if (!this.checkMove(move)) {
-          System.out.println("WTF");
-        }
         this.updateBoard(move);
         this.updateWin(move);
         this.updateDraw();
@@ -76,10 +73,8 @@ public class GameBoard {
     if (t1 == 'X') {
       t2 = 'O';
     }
-    Player player1 = new Player(t1, 1);
-    Player player2 = new Player(t2, 2);
-    p1 = player1;
-    p2 = player2;
+    p1 = new Player(t1, 1);
+    p2 = new Player(t2, 2);
     gameStarted = false;
     turn = 1;
     char[][] ibs = { { '\u0000', '\u0000', '\u0000' }, { '\u0000', '\u0000', '\u0000' },
@@ -183,6 +178,10 @@ public class GameBoard {
 
   public char getSquare(int x, int y) {
     return boardState[x][y];
+  }
+
+  public boolean nullBoard() {
+    return boardState == null;
   }
 
 }
