@@ -1,16 +1,11 @@
 package utils;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import models.Move;
-import models.Player;
 
 public class DatabaseJdbc {
 
@@ -34,10 +29,8 @@ public class DatabaseJdbc {
   }
 
   /**
-   * create new table
+   * creates new table named MOVE_TABLE.
    * 
-   * @param con    Connection object
-   * @param string table name
    * @return true if created successfully, false otherwise
    */
   public boolean createTable(Connection con) {
@@ -51,7 +44,13 @@ public class DatabaseJdbc {
       stmt.executeUpdate(sql);
       stmt.close();
     } catch (Exception e) {
-      // System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
       return false;
     }
     // System.out.println("Table created successfully");
@@ -62,7 +61,6 @@ public class DatabaseJdbc {
    * adds move data to the database table. adding a move with (-1,-1) means the player has
    * started/joined the game
    * 
-   * @param con  Connection object
    * @param move Move object containing data
    * @return true if data added successfully, false otherwise
    */
@@ -83,13 +81,24 @@ public class DatabaseJdbc {
       stmt.close();
       con.commit();
     } catch (Exception e) {
-      // System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
       return false;
     }
     // System.out.println("Records created successfully");
     return true;
   }
 
+  /**
+   * clears the table entries but keeps the table.
+   * 
+   * @return true if cleared successfully, false otherwise
+   */
   public boolean clear(Connection con) {
     Statement stmt = null;
 
@@ -104,24 +113,52 @@ public class DatabaseJdbc {
 
       stmt.close();
     } catch (Exception e) {
-      // System.err.println(e.getClass().getName() + ": " + e.getMessage());
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
       return false;
     }
     return true;
   }
 
   /**
+   * finds the number of entries in MOVE_TABLE.
    * 
-   * @param con
-   * @return true if the table is empty
-   * @throws SQLException
+   * @return number of entries, also returns 0 if MOVE_TABLE doesn't exist
    */
-  public int size(Connection con) throws SQLException {
-    Statement stmt = con.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * FROM MOVE_TABLE;");
+  public int size(Connection con) {
+    Statement stmt = null;
+    ResultSet rs = null;
     int size = 0;
-    while (rs.next()) {
-      size++;
+
+    try {
+      stmt = con.createStatement();
+      rs = stmt.executeQuery("SELECT * FROM MOVE_TABLE;");
+      while (rs.next()) {
+        size++;
+      }
+      stmt.close();
+      rs.close();
+    } catch (SQLException e) {
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+      } catch (SQLException e2) {
+        e2.printStackTrace();
+      }
+      e.printStackTrace();
     }
     return size;
   }

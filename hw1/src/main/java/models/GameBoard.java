@@ -1,13 +1,9 @@
 package models;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import utils.DatabaseJdbc;
 
 public class GameBoard {
@@ -26,7 +22,9 @@ public class GameBoard {
 
   private boolean isDraw;
 
-  // rests all fields
+  /**
+   * resets the game board fields to null or default values.
+   */
   public void reset() {
     p1 = null;
     p2 = null;
@@ -37,19 +35,29 @@ public class GameBoard {
     isDraw = false;
   }
 
+  /**
+   * loads the moves for the database into the game board.
+   */
   public void loadFromDb(DatabaseJdbc jdbc, Connection con) {
+    Statement stmt = null;
+    ResultSet rs = null;
+
     try {
-      Statement stmt = con.createStatement();
-      ResultSet rs = stmt.executeQuery("SELECT * FROM MOVE_TABLE;");
+      stmt = con.createStatement();
+      rs = stmt.executeQuery("SELECT * FROM MOVE_TABLE;");
       // if p1 started game, initialize board
       if (rs.next()) {
         initGameBoard((char) rs.getInt("PLAYER_TYPE"));
       } else {
+        rs.close();
+        stmt.close();
         return;
       }
       if (rs.next()) {
         gameStarted = true;
       } else {
+        rs.close();
+        stmt.close();
         return;
       }
 
@@ -60,7 +68,23 @@ public class GameBoard {
         this.updateWin(move);
         this.updateDraw();
       }
+      rs.close();
+      stmt.close();
     } catch (SQLException e) {
+      try {
+        if (stmt != null) {
+          stmt.close();
+        }
+      } catch (SQLException e1) {
+        e1.printStackTrace();
+      }
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+      } catch (SQLException e2) {
+        e2.printStackTrace();
+      }
       e.printStackTrace();
     }
   }

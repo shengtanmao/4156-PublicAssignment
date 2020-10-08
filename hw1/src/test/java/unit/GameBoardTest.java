@@ -4,21 +4,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
-
 import models.GameBoard;
 import models.Move;
 import models.Player;
-import utils.DatabaseJdbc;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.DatabaseJdbc;
 
 public class GameBoardTest {
-  GameBoard gb;
-  DatabaseJdbc jdbc;
-  Connection con;
+  private GameBoard gb;
+  private DatabaseJdbc jdbc;
+  private Connection con;
 
+  /**
+   * sets the relevant fields.
+   */
   @BeforeEach
   public void setUp() {
     gb = new GameBoard();
@@ -28,6 +29,9 @@ public class GameBoardTest {
     jdbc.clear(con);
   }
 
+  /**
+   * clears the relevant fields.
+   */
   @AfterEach
   public void reset() {
     jdbc.clear(con);

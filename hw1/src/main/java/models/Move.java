@@ -8,6 +8,9 @@ public class Move {
 
   private int moveY;
 
+  /**
+   * initializes an instance of Move.
+   */
   public Move(Player p, int x, int y) {
     player = p;
     moveX = x;

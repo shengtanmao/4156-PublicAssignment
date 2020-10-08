@@ -4,15 +4,12 @@ import com.google.gson.Gson;
 import io.javalin.Javalin;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Queue;
 import models.GameBoard;
 import models.Message;
 import models.Move;
-import models.Player;
-import utils.DatabaseJdbc;
-
 import org.eclipse.jetty.websocket.api.Session;
+import utils.DatabaseJdbc;
 
 public class PlayGame {
 
@@ -33,14 +30,9 @@ public class PlayGame {
 
     GameBoard gb = new GameBoard();
     Gson gson = new Gson();
-    try {
-      if (jdbc.size(con) > 0) {
-        gb.loadFromDb(jdbc, con);
-        sendGameBoardToAllPlayers(gson.toJson(gb));
-      }
-    } catch (SQLException e) {
-      System.err.println("SQLException");
-      e.printStackTrace();
+    if (jdbc.size(con) > 0) {
+      gb.loadFromDb(jdbc, con);
+      sendGameBoardToAllPlayers(gson.toJson(gb));
     }
 
     app = Javalin.create(config -> {
