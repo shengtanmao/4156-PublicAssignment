@@ -167,6 +167,7 @@ public class GameBoardTest {
   @Test
   public void testMoveOutsideX() {
     gb.initGameBoard('X');
+    gb.setGameStarted(true);
     Move m = new Move(gb.getP1(), -1, 1);
     assertEquals(false, gb.checkMove(m));
     m.setMoveX(3);
@@ -177,6 +178,7 @@ public class GameBoardTest {
   @Test
   public void testMoveOutsideY() {
     gb.initGameBoard('X');
+    gb.setGameStarted(true);
     Move m = new Move(gb.getP1(), 1, -1);
     assertEquals(false, gb.checkMove(m));
     m.setMoveY(3);
@@ -187,6 +189,7 @@ public class GameBoardTest {
   @Test
   public void testOccupied() {
     gb.initGameBoard('X');
+    gb.setGameStarted(true);
     Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setPlayer(gb.getP2());
@@ -197,6 +200,7 @@ public class GameBoardTest {
   @Test
   public void testConsecutive() {
     gb.initGameBoard('X');
+    gb.setGameStarted(true);
     Move m = new Move(gb.getP1(), 1, 1);
     gb.updateBoard(m);
     m.setMoveY(2);
@@ -207,6 +211,7 @@ public class GameBoardTest {
   @Test
   public void testValid() {
     gb.initGameBoard('X');
+    gb.setGameStarted(true);
     Move m = new Move(gb.getP1(), 1, 1);
     assertEquals(true, gb.checkMove(m));
   }

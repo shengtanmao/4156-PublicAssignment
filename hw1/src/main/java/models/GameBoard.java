@@ -114,8 +114,8 @@ public class GameBoard {
   public Boolean checkMove(Move m) {
     int x = m.getMoveX();
     int y = m.getMoveY();
-    return (turn == m.getPlayer().getId() && x >= 0 && x < 3 && y >= 0 && y < 3
-        && boardState[x][y] == '\u0000');
+    return (winner == 0 && gameStarted && turn == m.getPlayer().getId() && x >= 0 && x < 3 && y >= 0
+        && y < 3 && boardState[x][y] == '\u0000');
   }
 
   /**
